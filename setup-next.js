@@ -125,6 +125,29 @@ const SETUP_CONFIG = {
 				},
 			};
 		`,
+		"src/utilities/assertValue.ts": `
+			export function assertValue<T>(value: T | undefined, errorMessage: string): T {
+				if (value === undefined) {
+					throw new Error(errorMessage);
+				}
+
+				return value;
+			}
+		`,
+		"src/utilities/assertValue.test.ts": `
+			import { assertValue } from "./assertValue";
+
+			describe("assertValue", () => {
+				it("should return the value if it is not undefined", () => {
+					const value = "value";
+					expect(assertValue(value, "error")).toBe(value);
+				});
+
+				it("should throw an error if the value is undefined", () => {
+					expect(() => assertValue(undefined, "error")).toThrowError("error");
+				});
+			});
+		`,
 		"drizzle.config.ts": `
 			import { defineConfig } from "drizzle-kit";
 
