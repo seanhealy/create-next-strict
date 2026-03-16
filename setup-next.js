@@ -25,7 +25,7 @@ const SETUP_CONFIG = {
 
 	// Files to create
 	filesToCreate: {
-		".prettierrc.js": `
+		".prettierrc.cjs": `
 			/** @type {import("prettier").Config} */
 			const config = {
 				useTabs: true,
@@ -326,9 +326,9 @@ const SETUP_CONFIG = {
 	`,
 };
 
+import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
 
 // Helper function to remove indentation from template literals
 function dedent(str) {
@@ -417,9 +417,7 @@ if (initMode) {
 	} else {
 		// Check if directory already has a package.json (safety check)
 		if (fs.existsSync("package.json")) {
-			console.error(
-				"❌ package.json already exists in the current directory.",
-			);
+			console.error("❌ package.json already exists in the current directory.");
 			console.error(
 				"   --init is intended for empty directories. Remove package.json or run without --init.",
 			);
@@ -660,12 +658,7 @@ if (SETUP_CONFIG.readmeAppend) {
 	} else if (readmeExists) {
 		const originalContent = fs.readFileSync(readmePath, "utf8");
 		const newContent = `${originalContent.trimEnd()}\n\n${appendContent}`;
-		safeWriteFile(
-			readmePath,
-			newContent,
-			"Updated README.md",
-			originalContent,
-		);
+		safeWriteFile(readmePath, newContent, "Updated README.md", originalContent);
 	} else {
 		safeWriteFile(readmePath, appendContent, "Created README.md");
 	}
@@ -715,9 +708,7 @@ if (!isDryRun) {
 		execSync("npm run lint:fix", { stdio: "inherit" });
 		console.log("✅ Project is in a clean lint state");
 	} catch (_error) {
-		console.warn(
-			"⚠️  lint:fix completed with warnings — review output above",
-		);
+		console.warn("⚠️  lint:fix completed with warnings — review output above");
 	}
 	console.log();
 } else {

@@ -1,21 +1,49 @@
 {
-  "name": "create-next-strict",
-  "version": "1.0.0",
-  "description": "Wrap Create Next App in Strict Defaults",
-  "homepage": "https://github.com/seanhealy/create-next-strict#readme",
-  "bugs": {
-    "url": "https://github.com/seanhealy/create-next-strict/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/seanhealy/create-next-strict.git"
-  },
-  "license": "MIT",
-  "author": "Sean Healy",
-  "type": "module",
-  "bin": {
-    "create-next-strict": "setup-next.js"
-  },
-  "scripts": {}
-
+	"name": "create-next-strict",
+	"version": "1.0.0",
+	"description": "Wrap Create Next App in Strict Defaults",
+	"homepage": "https://github.com/seanhealy/create-next-strict#readme",
+	"bugs": {
+		"url": "https://github.com/seanhealy/create-next-strict/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/seanhealy/create-next-strict.git"
+	},
+	"license": "MIT",
+	"author": "Sean Healy",
+	"type": "module",
+	"bin": {
+		"create-next-strict": "setup-next.js"
+	},
+	"files": [
+		"setup-next.js",
+		"LICENSE",
+		"README.md"
+	],
+	"keywords": [
+		"next",
+		"nextjs",
+		"create-next-app",
+		"biome",
+		"drizzle",
+		"neon",
+		"strict",
+		"scaffold"
+	],
+	"scripts": {
+		"start": "node setup-next.js",
+		"test": "node setup-next.js --init --dry-run",
+		"lint": "biome check && prettier --check .",
+		"format": "biome check --write",
+		"lint:fix": "biome check --write && prettier --write ."
+	},
+	"volta": {
+		"node": "24.10.0",
+		"npm": "11.6.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.7",
+		"prettier": "^3.8.1"
+	}
 }
