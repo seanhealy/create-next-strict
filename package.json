@@ -1,0 +1,21 @@
+{
+  "name": "create-next-strict",
+  "version": "1.0.0",
+  "description": "Wrap Create Next App in Strict Defaults",
+  "homepage": "https://github.com/seanhealy/create-next-strict#readme",
+  "bugs": {
+    "url": "https://github.com/seanhealy/create-next-strict/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seanhealy/create-next-strict.git"
+  },
+  "license": "MIT",
+  "author": "Sean Healy",
+  "type": "module",
+  "bin": {
+    "create-next-strict": "setup-next.js"
+  },
+  "scripts": {}
+
+}

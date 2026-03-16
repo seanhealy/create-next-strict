@@ -326,9 +326,9 @@ const SETUP_CONFIG = {
 	`,
 };
 
-const fs = require("node:fs");
-const path = require("node:path");
-const { execSync } = require("node:child_process");
+import fs from "node:fs";
+import path from "node:path";
+import { execSync } from "node:child_process";
 
 // Helper function to remove indentation from template literals
 function dedent(str) {
@@ -370,7 +370,7 @@ modifications to an existing Next.js project.
 
 What it does:
 - Scaffolds a Next.js project (with --init): TypeScript, Biome, React
-  Compiler, Tailwind CSS, src/ directory, App Router
+  Compiler, CSS Modules, src/ directory, App Router
 - Installs prettier with tab-based config for MD/HTML only
 - Updates biome.json to use tabs and add property sorting
 - Updates lint/lint:fix scripts to include prettier
@@ -378,11 +378,11 @@ What it does:
 - Creates Zed editor settings for Biome integration
 
 Usage:
-  ~/bin/setup-next.js              Show this help (default)
-  ~/bin/setup-next.js --write      Apply modifications only
-  ~/bin/setup-next.js --init -write    Scaffold project + apply modifications
-  ~/bin/setup-next.js --dry-run    Preview changes without applying
-  ~/bin/setup-next.js --help       Show this help
+  create-next-strict              Show this help (default)
+  create-next-strict --write      Apply modifications only
+  create-next-strict --init --write   Scaffold project + apply modifications
+  create-next-strict --dry-run    Preview changes without applying
+  create-next-strict --help       Show this help
 
 Options:
   --write, -w      Apply changes (required to make actual modifications)
@@ -392,13 +392,13 @@ Options:
 
 Examples:
   # Full setup: scaffold a new project in the current directory, then customize
-  ~/bin/setup-next.js --init --write
+  create-next-strict --init --write
 
   # Just apply customizations to an existing Next.js project
-  ~/bin/setup-next.js --write
+  create-next-strict --write
 
   # Preview what --init --write would do without making changes
-  ~/bin/setup-next.js --init --dry-run`);
+  create-next-strict --init --dry-run`);
 	process.exit(0);
 }
 
@@ -743,7 +743,7 @@ const jsonFiles = Object.keys(SETUP_CONFIG.jsonModifications);
 
 if (initMode) {
 	console.log(
-		"  • Scaffolded Next.js project (TS, Biome, Tailwind, React Compiler, App Router, src/)",
+		"  • Scaffolded Next.js project (TS, Biome, CSS Modules, React Compiler, App Router, src/)",
 	);
 }
 console.log(`  • Installed ${packageNames.join(", ")}`);
@@ -769,5 +769,5 @@ if (writeMode) {
 	console.log("  • npm run dev (start dev server)");
 } else {
 	console.log("\n💡 To apply these changes, run:");
-	console.log("  ~/bin/setup-next.js --write");
+	console.log("  create-next-strict --write");
 }

@@ -13,9 +13,9 @@ The script also generates an `AGENTS.md` file (symlinked as `CLAUDE.md` and `.gi
 ## Running the Tool
 
 ```bash
-node setup-next.js --init --write    # Scaffold a new project and apply all modifications
-node setup-next.js --init --dry-run  # Preview what would be created/modified
-node setup-next.js --help            # Show usage
+create-next-strict --init --write    # Scaffold a new project and apply all modifications
+create-next-strict --init --dry-run  # Preview what would be created/modified
+create-next-strict --help            # Show usage
 ```
 
 Flags: `--init`/`-i` (scaffold), `--write`/`-w` (apply changes), `--dry-run`/`-d` (preview only).
