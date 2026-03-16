@@ -22,27 +22,33 @@ Scaffold a Next.js project with opinionated strict defaults in one command.
 
 ```bash
 mkdir my-app && cd my-app
-npx create-next-strict --init --write
+npx create-next-strict
 ```
+
+Automatically detects context:
+
+- **Empty directory** (no `package.json`) — scaffolds with `create-next-app`,
+  then applies strict defaults
+- **Existing project** (has `package.json`) — applies strict defaults only
 
 ### Options
 
-| Flag              | Description                                                |
-| ----------------- | ---------------------------------------------------------- |
-| `--init`, `-i`    | Scaffold a new Next.js project first (via create-next-app) |
-| `--write`, `-w`   | Apply changes (required to make actual modifications)      |
-| `--dry-run`, `-d` | Preview changes without applying                           |
-| `--help`, `-h`    | Show help                                                  |
+| Flag              | Description                      |
+| ----------------- | -------------------------------- |
+| `--dry-run`, `-d` | Preview changes without applying |
+| `--help`, `-h`    | Show help                        |
 
 ### Examples
 
 ```bash
-# Full setup: scaffold + customize
-create-next-strict --init --write
+# Full setup: scaffold a new project + apply strict defaults
+mkdir my-app && cd my-app
+npx create-next-strict
 
-# Apply customizations to an existing Next.js project
-create-next-strict --write
+# Apply strict defaults to an existing Next.js project
+cd existing-app
+npx create-next-strict
 
 # Preview what would happen
-create-next-strict --init --dry-run
+npx create-next-strict --dry-run
 ```

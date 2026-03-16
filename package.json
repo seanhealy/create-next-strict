@@ -33,11 +33,11 @@
 	],
 	"scripts": {
 		"start": "node setup-next.js",
-		"test": "node setup-next.js --init --dry-run",
 		"lint": "biome check && prettier --check .",
 		"format": "biome check --write",
 		"lint:fix": "biome check --write && prettier --write .",
-		"test:seed": "mkdir -p test-app && cd test-app && node ../setup-next.js --init --write",
+		"test": "node setup-next.js --dry-run",
+		"test:seed": "mkdir -p test-app && cd test-app && node ../setup-next.js",
 		"test:clean": "rm -rf test-app"
 	},
 	"volta": {

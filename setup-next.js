@@ -416,52 +416,52 @@ function dedent(str) {
 
 // Parse command line arguments
 const args = process.argv.slice(2);
-const writeMode = args.includes("--write") || args.includes("-w");
-const initMode = args.includes("--init") || args.includes("-i");
-const isDryRun =
-	args.includes("--dry-run") || args.includes("-d") || !writeMode;
+const isDryRun = args.includes("--dry-run") || args.includes("-d");
 const showHelp = args.includes("--help") || args.includes("-h");
 
-// Show help by default if no args or if help is requested
-const shouldShowHelp = showHelp || args.length === 0;
+// Auto-detect: scaffold if no package.json exists
+const initMode = !fs.existsSync("package.json");
 
-if (shouldShowHelp) {
+if (showHelp) {
 	console.log(`Next.js Setup Script
 
-Sets up a new Next.js project with opinionated defaults, or applies
-modifications to an existing Next.js project.
+Sets up a new Next.js project with opinionated strict defaults.
+
+Automatically detects context:
+- Empty directory (no package.json) → scaffolds with create-next-app, then
+  applies strict defaults
+- Existing project (has package.json) → applies strict defaults only
 
 What it does:
-- Scaffolds a Next.js project (with --init): TypeScript, Biome, React
-  Compiler, CSS Modules, src/ directory, App Router
-- Installs prettier with tab-based config for MD/HTML only
+- Scaffolds a Next.js project: TypeScript, Biome, React Compiler,
+  CSS Modules, src/ directory, App Router
+- Installs Vitest + Testing Library for unit/component testing
+- Installs Prettier with tab-based config for MD/HTML only
+- Installs Drizzle ORM + Neon PostgreSQL with repository pattern
 - Updates biome.json to use tabs and add property sorting
-- Updates lint/lint:fix scripts to include prettier
-- Adds volta to manage node/npm versions
+- Adds Volta to manage node/npm versions
 - Creates Zed editor settings for Biome integration
 
 Usage:
-  create-next-strict              Show this help (default)
-  create-next-strict --write      Apply modifications only
-  create-next-strict --init --write   Scaffold project + apply modifications
+  create-next-strict              Run setup (scaffold if needed + apply defaults)
   create-next-strict --dry-run    Preview changes without applying
   create-next-strict --help       Show this help
 
 Options:
-  --write, -w      Apply changes (required to make actual modifications)
-  --init, -i       Scaffold a new Next.js project first (via create-next-app)
   --dry-run, -d    Show what would be changed without making changes
   --help, -h       Show this help message
 
 Examples:
   # Full setup: scaffold a new project in the current directory, then customize
-  create-next-strict --init --write
+  mkdir my-app && cd my-app
+  npx create-next-strict
 
   # Just apply customizations to an existing Next.js project
-  create-next-strict --write
+  cd existing-app
+  npx create-next-strict
 
-  # Preview what --init --write would do without making changes
-  create-next-strict --init --dry-run`);
+  # Preview what would happen
+  npx create-next-strict --dry-run`);
 	process.exit(0);
 }
 
@@ -471,22 +471,13 @@ if (isDryRun) {
 
 console.log("🚀 Starting Next.js setup...\n");
 
-// Step 0: Scaffold project with create-next-app (if --init)
+// Step 0: Scaffold project with create-next-app (if no package.json)
 if (initMode) {
-	console.log("🏗️  Scaffolding Next.js project...");
+	console.log("🏗️  No package.json found — scaffolding Next.js project...");
 
 	if (isDryRun) {
 		console.log(`📝 Would run: ${CREATE_NEXT_APP_CMD}`);
 	} else {
-		// Check if directory already has a package.json (safety check)
-		if (fs.existsSync("package.json")) {
-			console.error("❌ package.json already exists in the current directory.");
-			console.error(
-				"   --init is intended for empty directories. Remove package.json or run without --init.",
-			);
-			process.exit(1);
-		}
-
 		try {
 			console.log(`🔧 Running: ${CREATE_NEXT_APP_CMD}`);
 			execSync(CREATE_NEXT_APP_CMD, { stdio: "inherit" });
@@ -498,6 +489,8 @@ if (initMode) {
 	}
 
 	console.log();
+} else {
+	console.log("📦 Found existing package.json — applying strict defaults...\n");
 }
 
 console.log("🔧 Applying modifications...\n");
@@ -832,10 +825,10 @@ if (SETUP_CONFIG.symlinks) {
 	});
 }
 
-if (writeMode) {
+if (!isDryRun) {
 	console.log("\n💡 You can now run:");
 	console.log("  • npm run dev (start dev server)");
 } else {
 	console.log("\n💡 To apply these changes, run:");
-	console.log("  create-next-strict --write");
+	console.log("  npx create-next-strict");
 }

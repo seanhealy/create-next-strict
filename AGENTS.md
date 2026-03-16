@@ -19,13 +19,13 @@ The script also generates an `AGENTS.md` file (symlinked as `CLAUDE.md` and
 ## Running the Tool
 
 ```bash
-create-next-strict --init --write    # Scaffold a new project and apply all modifications
-create-next-strict --init --dry-run  # Preview what would be created/modified
-create-next-strict --help            # Show usage
+create-next-strict              # Run setup (scaffold if needed + apply defaults)
+create-next-strict --dry-run    # Preview what would be created/modified
+create-next-strict --help       # Show usage
 ```
 
-Flags: `--init`/`-i` (scaffold), `--write`/`-w` (apply changes),
-`--dry-run`/`-d` (preview only).
+Auto-detects context: scaffolds with `create-next-app` if no `package.json`
+exists, otherwise applies strict defaults to the existing project.
 
 ## Architecture
 
