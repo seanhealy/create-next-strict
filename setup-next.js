@@ -24,7 +24,6 @@ const SETUP_CONFIG = {
 		vitest: "latest",
 		jsdom: "latest",
 		"@vitejs/plugin-react": "latest",
-		"vite-tsconfig-paths": "latest",
 		"@testing-library/react": "latest",
 		"@testing-library/user-event": "latest",
 		"@testing-library/jest-dom": "latest",
@@ -97,8 +96,11 @@ const SETUP_CONFIG = {
 			import { drizzle } from "drizzle-orm/neon-http";
 
 			import * as schema from "./schema";
+			import { assertValue } from "@/utilities/assertValue";
 
-			const sql = neon(process.env.DATABASE_URL!);
+			const sql = neon(
+				assertValue(process.env.DATABASE_URL, "DATABASE_URL is not set"),
+			);
 
 			export const db = drizzle(sql, { schema });
 		`,
@@ -159,11 +161,13 @@ const SETUP_CONFIG = {
 		`,
 		"vitest.config.ts": `
 			import react from "@vitejs/plugin-react";
-			import tsconfigPaths from "vite-tsconfig-paths";
 			import { defineConfig } from "vitest/config";
 
 			export default defineConfig({
-				plugins: [tsconfigPaths(), react()],
+				plugins: [react()],
+				resolve: {
+					tsconfigPaths: true,
+				},
 				test: {
 					environment: "jsdom",
 					setupFiles: ["./vitest.setup.ts"],
@@ -176,12 +180,14 @@ const SETUP_CONFIG = {
 		"drizzle.config.ts": `
 			import { defineConfig } from "drizzle-kit";
 
+			import { assertValue } from "@/utilities/assertValue";
+
 			export default defineConfig({
 				dialect: "postgresql",
 				schema: "./src/db/schema.ts",
 				out: "./drizzle",
 				dbCredentials: {
-					url: process.env.DATABASE_URL!,
+					url: assertValue(process.env.DATABASE_URL, "DATABASE_URL is not set"),
 				},
 			});
 		`,
@@ -772,7 +778,21 @@ if (!isDryRun) {
 	console.log("🧹 Would run: npm run lint:fix\n");
 }
 
-// Step 7: Summary
+// Step 7: Run tests to verify setup
+if (!isDryRun) {
+	console.log("🧪 Running tests to verify setup...");
+	try {
+		execSync("npm run test", { stdio: "inherit" });
+		console.log("✅ All tests pass");
+	} catch (_error) {
+		console.warn("⚠️  Tests completed with failures — review output above");
+	}
+	console.log();
+} else {
+	console.log("🧪 Would run: npm run test\n");
+}
+
+// Step 8: Summary
 if (isDryRun) {
 	console.log("🔍 PREVIEW COMPLETED - No actual changes were made\n");
 	console.log("📝 Would make these changes:");
