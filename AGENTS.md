@@ -9,8 +9,9 @@ or real credentials. Use `.env.example` with placeholder values only.
 
 `create-next-strict` is a single-script CLI tool (`setup-next.js`) that wraps
 Create Next App to scaffold Next.js projects with opinionated strict defaults:
-Biome linting/formatting, Drizzle ORM + Neon PostgreSQL, Prettier for
-markdown/HTML, Volta for Node version pinning, and Zed editor settings.
+Biome linting/formatting, Drizzle ORM + Neon PostgreSQL, Vitest + Testing
+Library, Prettier for markdown/HTML, Volta for Node version pinning, and Zed
+editor settings.
 
 The script also generates an `AGENTS.md` file (symlinked as `CLAUDE.md` and
 `.github/copilot-instructions.md`) inside scaffolded projects.
@@ -47,5 +48,6 @@ Everything lives in `setup-next.js` (~774 lines). Key structure:
 - Biome for JS/TS/CSS/JSON; Prettier only for markdown/HTML
 - Named exports preferred (default exports only for pages/layouts)
 - Function declarations for components (not arrow functions)
+- Vitest + Testing Library for unit/component tests
 - Repository pattern for database access (`src/db/repositories/`)
 - Import alias `@/*` → `src/*`

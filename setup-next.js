@@ -21,6 +21,13 @@ const SETUP_CONFIG = {
 	devPackages: {
 		prettier: "latest",
 		"drizzle-kit": "latest",
+		vitest: "latest",
+		jsdom: "latest",
+		"@vitejs/plugin-react": "latest",
+		"vite-tsconfig-paths": "latest",
+		"@testing-library/react": "latest",
+		"@testing-library/user-event": "latest",
+		"@testing-library/jest-dom": "latest",
 	},
 
 	// Files to create
@@ -135,6 +142,8 @@ const SETUP_CONFIG = {
 			}
 		`,
 		"src/utilities/assertValue.test.ts": `
+			import { describe, expect, it } from "vitest";
+
 			import { assertValue } from "./assertValue";
 
 			describe("assertValue", () => {
@@ -147,6 +156,22 @@ const SETUP_CONFIG = {
 					expect(() => assertValue(undefined, "error")).toThrowError("error");
 				});
 			});
+		`,
+		"vitest.config.ts": `
+			import react from "@vitejs/plugin-react";
+			import tsconfigPaths from "vite-tsconfig-paths";
+			import { defineConfig } from "vitest/config";
+
+			export default defineConfig({
+				plugins: [tsconfigPaths(), react()],
+				test: {
+					environment: "jsdom",
+					setupFiles: ["./vitest.setup.ts"],
+				},
+			});
+		`,
+		"vitest.setup.ts": `
+			import "@testing-library/jest-dom/vitest";
 		`,
 		"drizzle.config.ts": `
 			import { defineConfig } from "drizzle-kit";
@@ -175,6 +200,7 @@ const SETUP_CONFIG = {
 			- **Database:** [Neon](https://neon.tech/) (Serverless Postgres)
 			- **ORM:** [Drizzle ORM](https://orm.drizzle.team/)
 			- **Linter/Formatter:** [Biome](https://biomejs.dev/) for JS/TS/CSS/JSON
+			- **Testing:** [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/)
 			- **Formatter (MD/HTML):** [Prettier](https://prettier.io/)
 			- **Node version manager:** [Volta](https://volta.sh/)
 
@@ -248,11 +274,14 @@ const SETUP_CONFIG = {
 			| \`npm run db:migrate\` | Run pending migrations |
 			| \`npm run db:push\` | Push schema directly (dev shortcut) |
 			| \`npm run db:studio\` | Open Drizzle Studio (visual DB browser) |
+			| \`npm run test\` | Run tests once |
+			| \`npm run test:watch\` | Run tests in watch mode |
 
 			## Before Submitting Changes
 
-			1. Run \`npm run lint:fix\` to auto-format and fix lint issues
-			2. Run \`npm run build\` to verify the project compiles without errors
+			1. Run \`npm run test\` to verify all tests pass
+			2. Run \`npm run lint:fix\` to auto-format and fix lint issues
+			3. Run \`npm run build\` to verify the project compiles without errors
 		`,
 	},
 
@@ -292,6 +321,8 @@ const SETUP_CONFIG = {
 			packageJson.scripts["db:migrate"] = "drizzle-kit migrate";
 			packageJson.scripts["db:push"] = "drizzle-kit push";
 			packageJson.scripts["db:studio"] = "drizzle-kit studio";
+			packageJson.scripts.test = "vitest run";
+			packageJson.scripts["test:watch"] = "vitest";
 
 			// Update volta configuration
 			if (!packageJson.volta) packageJson.volta = {};
@@ -328,6 +359,7 @@ const SETUP_CONFIG = {
 		| Import alias | \`@/*\` |
 		| Database | [Neon](https://neon.tech/) (Serverless Postgres) |
 		| ORM | [Drizzle ORM](https://orm.drizzle.team/) |
+		| Testing | [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) |
 		| Formatter (MD/HTML) | [Prettier](https://prettier.io/) (tabs, 80 col) |
 		| Node version manager | [Volta](https://volta.sh/) |
 		| Editor | [Zed](https://zed.dev/) settings included |
@@ -346,6 +378,8 @@ const SETUP_CONFIG = {
 		| \`npm run db:migrate\` | Run pending migrations |
 		| \`npm run db:push\` | Push schema directly (dev shortcut) |
 		| \`npm run db:studio\` | Open Drizzle Studio (visual DB browser) |
+		| \`npm run test\` | Run tests once |
+		| \`npm run test:watch\` | Run tests in watch mode |
 	`,
 };
 

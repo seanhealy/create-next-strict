@@ -4,18 +4,19 @@ Scaffold a Next.js project with opinionated strict defaults in one command.
 
 ## What You Get
 
-| Category             | Choice                                           |
-| -------------------- | ------------------------------------------------ |
-| Language             | TypeScript                                       |
-| Router               | App Router with `src/` directory                 |
-| Linter/Formatter     | [Biome](https://biomejs.dev/) (JS/TS/CSS/JSON)   |
-| Formatter (MD/HTML)  | [Prettier](https://prettier.io/)                 |
-| Database             | [Neon](https://neon.tech/) (Serverless Postgres) |
-| ORM                  | [Drizzle ORM](https://orm.drizzle.team/)         |
-| React Compiler       | Enabled                                          |
-| Node version manager | [Volta](https://volta.sh/)                       |
-| Editor               | [Zed](https://zed.dev/) settings included        |
-| Indentation          | Tabs, 80-column line width                       |
+| Category             | Choice                                                                          |
+| -------------------- | ------------------------------------------------------------------------------- |
+| Language             | TypeScript                                                                      |
+| Router               | App Router with `src/` directory                                                |
+| Linter/Formatter     | [Biome](https://biomejs.dev/) (JS/TS/CSS/JSON)                                  |
+| Testing              | [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) |
+| Formatter (MD/HTML)  | [Prettier](https://prettier.io/)                                                |
+| Database             | [Neon](https://neon.tech/) (Serverless Postgres)                                |
+| ORM                  | [Drizzle ORM](https://orm.drizzle.team/)                                        |
+| React Compiler       | Enabled                                                                         |
+| Node version manager | [Volta](https://volta.sh/)                                                      |
+| Editor               | [Zed](https://zed.dev/) settings included                                       |
+| Indentation          | Tabs, 80-column line width                                                      |
 
 ## Usage
 
