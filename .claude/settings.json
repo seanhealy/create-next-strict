@@ -1,0 +1,11 @@
+{
+	"permissions": {
+		"allow": [
+			"Bash(npm run test)",
+			"Bash(npm run test:seed)",
+			"Bash(npm run test:clean)",
+			"Bash(npm run lint)",
+			"Bash(npm list)"
+		]
+	}
+}
