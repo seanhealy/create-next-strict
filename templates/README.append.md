@@ -36,3 +36,5 @@ and customized with `setup-next.js` using the following choices:
 | `npm run db:studio`   | Open Drizzle Studio (visual DB browser) |
 | `npm run test`        | Run tests once                          |
 | `npm run test:watch`  | Run tests in watch mode                 |
+| `npm run typecheck`   | TypeScript type check (no emit)         |
+| `npm run verify`      | Typecheck + lint:fix + test in one |

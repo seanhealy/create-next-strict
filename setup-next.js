@@ -11,8 +11,9 @@ const CREATE_NEXT_APP_CMD =
 	"npx create-next-app@latest . --ts --biome --react-compiler --no-tailwind --src-dir --app --import-alias @/*";
 
 // File name convention: files containing this marker get appended to the target
-// e.g. "README.append.md" → append content to "README.md"
-const APPEND_MARKER = ".append.";
+// e.g. "README.append.md" → append to "README.md"
+// e.g. ".gitignore.append" → append to ".gitignore"
+const APPEND_MARKER = ".append";
 
 const SETUP_CONFIG = {
 	// NPM packages to install (production dependencies)
@@ -75,6 +76,9 @@ const SETUP_CONFIG = {
 			packageJson.scripts["db:studio"] = "drizzle-kit studio";
 			packageJson.scripts.test = "vitest run";
 			packageJson.scripts["test:watch"] = "vitest";
+			packageJson.scripts.typecheck = "tsc --noEmit";
+			packageJson.scripts.verify =
+				"npm run typecheck && npm run lint:fix && npm run test";
 
 			// Update volta configuration
 			if (!packageJson.volta) packageJson.volta = {};
@@ -394,7 +398,7 @@ for (const filePath of templateFiles) {
 	const content = fs.readFileSync(path.join(templatesDir, filePath), "utf8");
 
 	if (filePath.includes(APPEND_MARKER)) {
-		const targetPath = filePath.replace(APPEND_MARKER, ".");
+		const targetPath = filePath.replace(APPEND_MARKER, "");
 		const targetExists = fs.existsSync(targetPath);
 
 		if (isDryRun) {
@@ -522,7 +526,7 @@ jsonFiles.forEach((file) => {
 templateFiles
 	.filter((f) => f.includes(APPEND_MARKER))
 	.forEach((f) => {
-		console.log(`  • Appended to ${f.replace(APPEND_MARKER, ".")}`);
+		console.log(`  • Appended to ${f.replace(APPEND_MARKER, "")}`);
 	});
 if (SETUP_CONFIG.symlinks) {
 	Object.entries(SETUP_CONFIG.symlinks).forEach(([target, links]) => {

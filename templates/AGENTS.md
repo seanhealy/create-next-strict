@@ -54,6 +54,7 @@ src/
   `UserRepository`, `PostRepository`).
 - Never import `db` directly in route handlers or components — always go through
   a repository.
+- Use UUIDs for all database primary keys — never sequential/guessable IDs.
 - Define tables in `src/db/schema.ts` using Drizzle's schema API.
 - Use `npm run db:generate` to create migrations after schema changes, then
   `npm run db:migrate` to apply them.
@@ -64,9 +65,25 @@ src/
 - **Line width:** 80 columns
 - **Import alias:** `@/*` maps to `src/*`
 - **Imports:** Auto-organized by Biome
-- **Object properties:** Auto-sorted by Biome
+- **Object/interface properties:** Order by importance, not alphabetically.
+  Group related properties together. Identifying fields (e.g., `identifier`)
+  come first, core fields next, optional/metadata fields last.
 - Prefer named exports over default exports (except for pages/layouts)
 - Use `function` declarations for components, not arrow functions
+- **Function ordering:** Most important first, helpers last. Exported/primary
+  functions at the top of the file, internal helpers below in descending
+  importance. Since functions are hoisted, usage order doesn't matter.
+- **Variable naming:** Use full words, not abbreviations (e.g., `action` not
+  `fn`, `implementation` not `impl`, `context` not `ctx`)
+- **Iteration:** Prefer enumerables (`forEach`, `map`, `reduce`, `filter`,
+  `find`) over `for` loops.
+- **Directory modules:** When a module grows into a directory, use `index.ts` as
+  a barrel export only — the implementation lives in a named file (e.g.,
+  `machineBuilder/index.ts` re-exports from `machineBuilder/machineBuilder.ts`)
+
+## Testing Conventions
+
+See docs/TESTING.md for testing conventions.
 
 ## Commands
 
@@ -84,9 +101,9 @@ src/
 | `npm run db:studio`   | Open Drizzle Studio (visual DB browser) |
 | `npm run test`        | Run tests once                          |
 | `npm run test:watch`  | Run tests in watch mode                 |
+| `npm run typecheck`   | TypeScript type check (no emit)         |
+| `npm run verify`      | Typecheck + lint:fix + test in one |
 
 ## Before Submitting Changes
 
-1. Run `npm run test` to verify all tests pass
-2. Run `npm run lint:fix` to auto-format and fix lint issues
-3. Run `npm run build` to verify the project compiles without errors
+Run `npm run verify` to typecheck, auto-fix lint issues, and run tests.
