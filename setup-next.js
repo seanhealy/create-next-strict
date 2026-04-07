@@ -6,9 +6,13 @@
  * Edit this config to customize what changes the script makes
  */
 
-// create-next-app scaffolding command (used with --init)
+// create-next-app scaffolding command
 const CREATE_NEXT_APP_CMD =
 	"npx create-next-app@latest . --ts --biome --react-compiler --no-tailwind --src-dir --app --import-alias @/*";
+
+// File name convention: files containing this marker get appended to the target
+// e.g. "README.append.md" → append content to "README.md"
+const APPEND_MARKER = ".append.";
 
 const SETUP_CONFIG = {
 	// NPM packages to install (production dependencies)
@@ -29,267 +33,9 @@ const SETUP_CONFIG = {
 		"@testing-library/jest-dom": "latest",
 	},
 
-	// Files to create
-	filesToCreate: {
-		".prettierrc.cjs": `
-			/** @type {import("prettier").Config} */
-			const config = {
-				useTabs: true,
-				proseWrap: "always",
-				printWidth: 80,
-			};
-
-			module.exports = config;
-		`,
-		".prettierignore": `
-			# Ignore everything by default
-			*
-
-			# But don't ignore markdown files
-			!*.md
-			!**/*.md
-
-			# But don't ignore HTML files
-			!*.html
-			!**/*.html
-
-			# Don't ignore directories (needed for pattern matching to work)
-			!*/
-		`,
-		".zed/settings.json": `
-			// Folder-specific settings
-			//
-			// For a full list of overridable settings, and general information on folder-specific settings,
-			// see the documentation: https://zed.dev/docs/configuring-zed#settings-files
-			{
-				"code_actions_on_format": {
-					"source.fixAll.biome": true,
-					"source.fixAll.prettier": true
-				},
-				"languages": {
-					"JavaScript": { "formatter": { "language_server": { "name": "biome" } } },
-					"TypeScript": { "formatter": { "language_server": { "name": "biome" } } },
-					"TSX": { "formatter": { "language_server": { "name": "biome" } } },
-					"JSON": { "formatter": { "language_server": { "name": "biome" } } },
-					"JSONC": { "formatter": { "language_server": { "name": "biome" } } },
-					"CSS": { "formatter": { "language_server": { "name": "biome" } } },
-					"GraphQL": { "formatter": { "language_server": { "name": "biome" } } }
-				}
-			}
-		`,
-		"src/db/schema.ts": `
-			// Define your database tables here.
-			// See https://orm.drizzle.team/docs/sql-schema-declaration
-
-			// Example:
-			// import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-			//
-			// export const users = pgTable("users", {
-			// 	id: serial("id").primaryKey(),
-			// 	name: text("name").notNull(),
-			// 	email: text("email").notNull().unique(),
-			// 	createdAt: timestamp("created_at").defaultNow().notNull(),
-			// });
-		`,
-		"src/db/index.ts": `
-			import { neon } from "@neondatabase/serverless";
-			import { drizzle } from "drizzle-orm/neon-http";
-
-			import * as schema from "./schema";
-			import { assertValue } from "@/utilities/assertValue";
-
-			const sql = neon(
-				assertValue(process.env.DATABASE_URL, "DATABASE_URL is not set"),
-			);
-
-			export const db = drizzle(sql, { schema });
-		`,
-		"src/db/repositories/index.ts": `
-			// Barrel export for all repositories.
-			//
-			// As you add repositories, re-export them here:
-			// export { UserRepository } from "./users";
-
-			export { ExampleRepository } from "./example";
-		`,
-		"src/db/repositories/example.ts": `
-			import { sql } from "drizzle-orm";
-
-			import { db } from "@/db";
-
-			/**
-			 * Example repository demonstrating the repository pattern.
-			 *
-			 * Each repository encapsulates all database interactions for a
-			 * specific domain. Replace this with real repositories as you
-			 * build out your schema.
-			 */
-			export const ExampleRepository = {
-				/** Verify the database connection is working. */
-				async healthCheck(): Promise<{ now: Date }> {
-					const result = await db.execute(
-						sql\`SELECT NOW() as now\`,
-					);
-					return { now: result.rows[0].now as Date };
-				},
-			};
-		`,
-		"src/utilities/assertValue.ts": `
-			export function assertValue<T>(value: T | undefined, errorMessage: string): T {
-				if (value === undefined) {
-					throw new Error(errorMessage);
-				}
-
-				return value;
-			}
-		`,
-		"src/utilities/assertValue.test.ts": `
-			import { describe, expect, it } from "vitest";
-
-			import { assertValue } from "./assertValue";
-
-			describe("assertValue", () => {
-				it("should return the value if it is not undefined", () => {
-					const value = "value";
-					expect(assertValue(value, "error")).toBe(value);
-				});
-
-				it("should throw an error if the value is undefined", () => {
-					expect(() => assertValue(undefined, "error")).toThrowError("error");
-				});
-			});
-		`,
-		"vitest.config.ts": `
-			import react from "@vitejs/plugin-react";
-			import { defineConfig } from "vitest/config";
-
-			export default defineConfig({
-				plugins: [react()],
-				resolve: {
-					tsconfigPaths: true,
-				},
-				test: {
-					environment: "jsdom",
-					setupFiles: ["./vitest.setup.ts"],
-				},
-			});
-		`,
-		"vitest.setup.ts": `
-			import "@testing-library/jest-dom/vitest";
-		`,
-		"drizzle.config.ts": `
-			import { defineConfig } from "drizzle-kit";
-
-			import { assertValue } from "@/utilities/assertValue";
-
-			export default defineConfig({
-				dialect: "postgresql",
-				schema: "./src/db/schema.ts",
-				out: "./drizzle",
-				dbCredentials: {
-					url: assertValue(process.env.DATABASE_URL, "DATABASE_URL is not set"),
-				},
-			});
-		`,
-		".env.example": `
-			# Database — Neon PostgreSQL connection string
-			# Get yours at https://neon.tech
-			DATABASE_URL=postgresql://user:password@host/database?sslmode=require
-		`,
-		"AGENTS.md": `
-			# AGENTS.md
-
-			## Tech Stack
-
-			- **Framework:** [Next.js](https://nextjs.org/) (App Router)
-			- **Language:** TypeScript
-			- **Database:** [Neon](https://neon.tech/) (Serverless Postgres)
-			- **ORM:** [Drizzle ORM](https://orm.drizzle.team/)
-			- **Linter/Formatter:** [Biome](https://biomejs.dev/) for JS/TS/CSS/JSON
-			- **Testing:** [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/)
-			- **Formatter (MD/HTML):** [Prettier](https://prettier.io/)
-			- **Node version manager:** [Volta](https://volta.sh/)
-
-			## Project Structure
-
-			This project uses the \`src/\` directory layout with the App Router:
-
-			\`\`\`
-			src/
-			├── app/
-			│   ├── layout.tsx
-			│   ├── page.tsx
-			│   ├── components/   # Global, reusable components
-			│   ├── dashboard/
-			│   │   ├── page.tsx
-			│   │   └── components/ # Components scoped to /dashboard
-			│   └── ...
-			├── db/
-			│   ├── index.ts          # Drizzle client + Neon connection
-			│   ├── schema.ts         # Table definitions
-			│   └── repositories/     # Repository pattern for DB access
-			│       ├── index.ts      # Barrel export
-			│       └── example.ts    # Example repository
-			└── ...
-			\`\`\`
-
-			## Component Organization
-
-			- Use **design system patterns** — build a consistent library of reusable,
-			  composable UI components with clear props interfaces rather than
-			  one-off inline markup.
-			- **Global components** shared across multiple pages go in
-			  \`src/app/components/\`.
-			- **Scoped components** that are only relevant to a single page or
-			  parent component go in a \`components/\` directory colocated with
-			  that page or component.
-
-			## Database & Repository Pattern
-
-			- All database interactions go through **repositories** in
-			  \`src/db/repositories/\`.
-			- Each repository encapsulates queries for a specific domain
-			  (e.g., \`UserRepository\`, \`PostRepository\`).
-			- Never import \`db\` directly in route handlers or components —
-			  always go through a repository.
-			- Define tables in \`src/db/schema.ts\` using Drizzle's schema API.
-			- Use \`npm run db:generate\` to create migrations after schema
-			  changes, then \`npm run db:migrate\` to apply them.
-
-			## Coding Conventions
-
-			- **Indentation:** Tabs (not spaces)
-			- **Line width:** 80 columns
-			- **Import alias:** \`@/*\` maps to \`src/*\`
-			- **Imports:** Auto-organized by Biome
-			- **Object properties:** Auto-sorted by Biome
-			- Prefer named exports over default exports (except for pages/layouts)
-			- Use \`function\` declarations for components, not arrow functions
-
-			## Commands
-
-			| Command | Description |
-			| --- | --- |
-			| \`npm run dev\` | Start dev server (Turbopack) |
-			| \`npm run build\` | Production build |
-			| \`npm run start\` | Start production server |
-			| \`npm run lint\` | Check with Biome + Prettier |
-			| \`npm run format\` | Auto-fix with Biome |
-			| \`npm run lint:fix\` | Auto-fix with Biome + Prettier |
-			| \`npm run db:generate\` | Generate migrations from schema |
-			| \`npm run db:migrate\` | Run pending migrations |
-			| \`npm run db:push\` | Push schema directly (dev shortcut) |
-			| \`npm run db:studio\` | Open Drizzle Studio (visual DB browser) |
-			| \`npm run test\` | Run tests once |
-			| \`npm run test:watch\` | Run tests in watch mode |
-
-			## Before Submitting Changes
-
-			1. Run \`npm run test\` to verify all tests pass
-			2. Run \`npm run lint:fix\` to auto-format and fix lint issues
-			3. Run \`npm run build\` to verify the project compiles without errors
-		`,
-	},
+	// Directory containing template files to copy into the project.
+	// The directory structure mirrors the output paths.
+	templatesDir: "templates",
 
 	// JSON file modifications
 	jsonModifications: {
@@ -345,73 +91,29 @@ const SETUP_CONFIG = {
 		"AGENTS.md": ["CLAUDE.md", ".github/copilot-instructions.md"],
 	},
 
-	// Content to append to README.md
-	readmeAppend: `
-		## Project Setup
-
-		This project was scaffolded with
-		[\`create-next-app\`](https://nextjs.org/docs/app/api-reference/cli/create-next-app)
-		and customized with
-		\`setup-next.js\` using the following choices:
-
-		| Category | Choice |
-		| --- | --- |
-		| Language | TypeScript |
-		| Linter | [Biome](https://biomejs.dev/) |
-		| React Compiler | Enabled |
-		| CSS | CSS Modules (Tailwind opt-out) |
-		| Project structure | \`src/\` directory |
-		| Router | App Router |
-		| Import alias | \`@/*\` |
-		| Database | [Neon](https://neon.tech/) (Serverless Postgres) |
-		| ORM | [Drizzle ORM](https://orm.drizzle.team/) |
-		| Testing | [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) |
-		| Formatter (MD/HTML) | [Prettier](https://prettier.io/) (tabs, 80 col) |
-		| Node version manager | [Volta](https://volta.sh/) |
-		| Editor | [Zed](https://zed.dev/) settings included |
-
-		### Available Scripts
-
-		| Command | Description |
-		| --- | --- |
-		| \`npm run dev\` | Start dev server (Turbopack) |
-		| \`npm run build\` | Production build |
-		| \`npm run start\` | Start production server |
-		| \`npm run lint\` | Check with Biome + Prettier |
-		| \`npm run format\` | Auto-fix with Biome |
-		| \`npm run lint:fix\` | Auto-fix with Biome + Prettier |
-		| \`npm run db:generate\` | Generate migrations from schema |
-		| \`npm run db:migrate\` | Run pending migrations |
-		| \`npm run db:push\` | Push schema directly (dev shortcut) |
-		| \`npm run db:studio\` | Open Drizzle Studio (visual DB browser) |
-		| \`npm run test\` | Run tests once |
-		| \`npm run test:watch\` | Run tests in watch mode |
-	`,
 };
 
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-// Helper function to remove indentation from template literals
-function dedent(str) {
-	const lines = str.split("\n");
+// Resolve the templates directory relative to the script location
+const scriptDir = path.dirname(new URL(import.meta.url).pathname);
+const templatesDir = path.join(scriptDir, SETUP_CONFIG.templatesDir);
 
-	// Remove leading/trailing empty lines
-	while (lines.length && !lines[0].trim()) lines.shift();
-	while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
-
-	if (!lines.length) return "";
-
-	// Find minimum indentation (excluding empty lines)
-	const minIndent = Math.min(
-		...lines
-			.filter((line) => line.trim())
-			.map((line) => line.match(/^\s*/)[0].length),
-	);
-
-	// Remove common indentation
-	return lines.map((line) => line.slice(minIndent)).join("\n");
+// Recursively walk a directory and return all file paths (relative to root)
+function walkDir(dir, root = dir) {
+	const entries = fs.readdirSync(dir, { withFileTypes: true });
+	const files = [];
+	for (const entry of entries) {
+		const fullPath = path.join(dir, entry.name);
+		if (entry.isDirectory()) {
+			files.push(...walkDir(fullPath, root));
+		} else {
+			files.push(path.relative(root, fullPath));
+		}
+	}
+	return files;
 }
 
 // Parse command line arguments
@@ -668,22 +370,50 @@ function safeModifyJsonFile(filePath, modifyFn, description) {
 
 // Step 1: Install packages
 console.log("📦 Installing packages...");
-Object.entries(SETUP_CONFIG.packages).forEach(([pkg, version]) => {
-	safeExecCommand(`npm i ${pkg}@${version}`, `${pkg} installed successfully`);
-});
-Object.entries(SETUP_CONFIG.devPackages).forEach(([pkg, version]) => {
+const pkgs = Object.entries(SETUP_CONFIG.packages)
+	.map(([pkg, version]) => `${pkg}@${version}`)
+	.join(" ");
+if (pkgs) {
+	safeExecCommand(`npm i ${pkgs}`, "Dependencies installed successfully");
+}
+const devPkgs = Object.entries(SETUP_CONFIG.devPackages)
+	.map(([pkg, version]) => `${pkg}@${version}`)
+	.join(" ");
+if (devPkgs) {
 	safeExecCommand(
-		`npm i -D ${pkg}@${version}`,
-		`${pkg} installed successfully (dev)`,
+		`npm i -D ${devPkgs}`,
+		"Dev dependencies installed successfully",
 	);
-});
+}
 console.log();
 
-// Step 2: Create config files
-console.log("📝 Creating configuration files...");
-Object.entries(SETUP_CONFIG.filesToCreate).forEach(([filePath, content]) => {
-	safeWriteFile(filePath, dedent(content), `Created ${filePath}`);
-});
+// Step 2: Apply template files
+console.log("📝 Applying template files...");
+const templateFiles = walkDir(templatesDir);
+for (const filePath of templateFiles) {
+	const content = fs.readFileSync(path.join(templatesDir, filePath), "utf8");
+
+	if (filePath.includes(APPEND_MARKER)) {
+		const targetPath = filePath.replace(APPEND_MARKER, ".");
+		const targetExists = fs.existsSync(targetPath);
+
+		if (isDryRun) {
+			if (targetExists || initMode) {
+				console.log(`📝 Would append to ${targetPath}`);
+			} else {
+				console.log(`📝 Would create ${targetPath}`);
+			}
+		} else if (targetExists) {
+			const originalContent = fs.readFileSync(targetPath, "utf8");
+			const newContent = `${originalContent.trimEnd()}\n\n${content}`;
+			safeWriteFile(targetPath, newContent, `Appended to ${targetPath}`);
+		} else {
+			safeWriteFile(targetPath, content, `Created ${targetPath}`);
+		}
+	} else {
+		safeWriteFile(filePath, content, `Created ${filePath}`);
+	}
+}
 console.log();
 
 // Step 3: Modify JSON config files
@@ -695,31 +425,6 @@ Object.entries(SETUP_CONFIG.jsonModifications).forEach(
 	},
 );
 console.log();
-
-// Step 4: Append to README.md
-if (SETUP_CONFIG.readmeAppend) {
-	console.log("📄 Updating README.md...");
-	const readmePath = "README.md";
-	const appendContent = dedent(SETUP_CONFIG.readmeAppend);
-	const readmeExists = fs.existsSync(readmePath);
-
-	if (isDryRun) {
-		if (readmeExists || initMode) {
-			// README exists now, or would exist after create-next-app
-			console.log("📝 Would append to README.md:");
-		} else {
-			console.log("📝 Would create README.md:");
-		}
-		console.log(appendContent);
-	} else if (readmeExists) {
-		const originalContent = fs.readFileSync(readmePath, "utf8");
-		const newContent = `${originalContent.trimEnd()}\n\n${appendContent}`;
-		safeWriteFile(readmePath, newContent, "Updated README.md", originalContent);
-	} else {
-		safeWriteFile(readmePath, appendContent, "Created README.md");
-	}
-	console.log();
-}
 
 // Step 5: Create symlinks
 if (SETUP_CONFIG.symlinks) {
@@ -799,7 +504,7 @@ const packageNames = [
 	...Object.keys(SETUP_CONFIG.packages),
 	...Object.keys(SETUP_CONFIG.devPackages),
 ];
-const fileNames = Object.keys(SETUP_CONFIG.filesToCreate);
+const fileNames = templateFiles.filter((f) => !f.includes(APPEND_MARKER));
 const jsonFiles = Object.keys(SETUP_CONFIG.jsonModifications);
 
 if (initMode) {
@@ -814,9 +519,11 @@ fileNames.forEach((file) => {
 jsonFiles.forEach((file) => {
 	console.log(`  • Updated ${file}`);
 });
-if (SETUP_CONFIG.readmeAppend) {
-	console.log("  • Updated README.md with project setup documentation");
-}
+templateFiles
+	.filter((f) => f.includes(APPEND_MARKER))
+	.forEach((f) => {
+		console.log(`  • Appended to ${f.replace(APPEND_MARKER, ".")}`);
+	});
 if (SETUP_CONFIG.symlinks) {
 	Object.entries(SETUP_CONFIG.symlinks).forEach(([target, links]) => {
 		for (const link of links) {

@@ -18,6 +18,7 @@
 	},
 	"files": [
 		"setup-next.js",
+		"templates",
 		"LICENSE",
 		"README.md"
 	],
