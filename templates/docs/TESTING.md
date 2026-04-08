@@ -3,12 +3,12 @@
 - [Describe your Files](#describe-your-files)
   - [When The filename Doesn't Match the Exports / Multiple Exports](#when-the-filename-doesnt-match-the-exports--multiple-exports)
 - [Nest Describes to add Context](#nest-describes-to-add-context)
-- [Use it to Describe the Expected Behavior](#use-it-to-describe-the-expected-behavior)
+- [Use it to Describe the Expected Behaviour](#use-it-to-describe-the-expected-behaviour)
 - [Single Expectation Tests](#single-expectation-tests)
 - [Use Subjects](#use-subjects)
 - [Before/After Hooks should be Single Concern](#beforeafter-hooks-should-be-single-concern)
 - [Don't use 'should'](#dont-use-should)
-- [Describe the Expected Behavior / What the User Will See](#describe-the-expected-behavior--what-the-user-will-see)
+- [Describe the Expected Behaviour / What the User Will See](#describe-the-expected-behaviour--what-the-user-will-see)
 - [Use Factories](#use-factories)
 - [When to Mock](#when-to-mock)
 - [Inspiration](#inspiration)
@@ -22,7 +22,7 @@ containing file. In this case your root describe should be the exported object.
 
 ```ts
 describe("a Hamburger Menu component", () => {});
-describe("a funciton that describes sandwitches", () => {});
+describe("a function that describes sandwiches", () => {});
 describe("a constant holding our ingredients", () => {});
 ```
 
@@ -30,7 +30,7 @@ describe("a constant holding our ingredients", () => {});
 
 ```ts
 describe("<HamburgerMenu />", () => {});
-describe("describeSandwitches()", () => {});
+describe("describeSandwiches()", () => {});
 describe("ingredients", () => {});
 ```
 
@@ -77,20 +77,20 @@ describe("sandwich/route", () => {
 
 ```ts
 describe("sandwich/page", () => {
-	describe("<SandwitchPage />", () => {});
+	describe("<SandwichPage />", () => {});
 });
 ```
 
 ## Nest Describes to add Context
 
 Use nested describes to add context to your tests. Contexts are a powerful
-method to make your tests clear and well organized (they keep tests easy to
-read). When describing a context, start its description with 'when', 'as, 'with'
-or 'without'.
+method to make your tests clear and well organised (they keep tests easy to
+read). When describing a context, start its description with 'when', 'as',
+'with' or 'without'.
 
 Nested describes can also be used to group tests that share a common setup or
-mock requirements. When doing this `beforeEach` is prefered for improved
-isolation however for more espensive operations `beforeAll` is also an option.
+mock requirements. When doing this `beforeEach` is preferred for improved
+isolation however for more expensive operations `beforeAll` is also an option.
 
 #### Bad
 
@@ -115,28 +115,28 @@ describe("when logged out", () => {
 });
 ```
 
-## Use `it` to Describe the Expected Behavior
+## Use `it` to Describe the Expected Behaviour
 
 #### Bad
 
 ```ts
-test("constructs a sandwitch", () => {});
+test("constructs a sandwich", () => {});
 ```
 
 #### Good
 
 ```ts
-it("constructs a sandwitch", () => {});
+it("constructs a sandwich", () => {});
 ```
 
 ## Single Expectation Tests
 
-Each test should specify one (and only one) behavior. Multiple expectations in
-the same test are a signal that you may be specifying multiple behaviors however
-there are cases where multiple expectations do support the testing of a single
-behavior.
+Each test should specify one (and only one) behaviour. Multiple expectations in
+the same test are a signal that you may be specifying multiple behaviours
+however there are cases where multiple expectations do support the testing of a
+single behaviour.
 
-When a test fails, it should be immediately clear what behavior is not working.
+When a test fails, it should be immediately clear what behaviour is not working.
 
 #### Bad
 
@@ -144,14 +144,14 @@ When a test fails, it should be immediately clear what behavior is not working.
 it("should render", () => {
 	expect(screen.getByText("Clubhouse")).toBeInTheDocument();
 	expect(
-		screen.getByText("A delicious sanwitch featuring bread and a tomato!"),
+		screen.getByText("A delicious sandwich featuring bread and a tomato!"),
 	).toBeInTheDocument();
 });
 ```
 
 ```ts
 it("builds the sandwich", () => {
-	const result = buildSandwitch(mockSandwich);
+	const result = buildSandwich(mockSandwich);
 
 	expect(db.contains(mockSandwich)).toBe(true);
 	expect(result).toEqual({
@@ -172,7 +172,7 @@ describe("content", () => {
 
 	it("shows the description", () => {
 		expect(
-			screen.getByText("A delicious sanwitch featuring bread and a tomato!"),
+			screen.getByText("A delicious sandwich featuring bread and a tomato!"),
 		).toBeInTheDocument();
 	});
 });
@@ -181,15 +181,15 @@ describe("content", () => {
 ```ts
 it("formats discounts", () => {
 	// In this case while we do have multiple expectations they are all directly
-	// related the same single behavior of the discount being properly formatted.
+	// related the same single behaviour of the discount being properly formatted.
 	expect(screen.getByText("Button")).toHaveClass("discount");
 	expect(screen.getByText("Button")).not.toHaveClass("full-price");
 });
 ```
 
 ```ts
-describe("when it builds a sandwitch", () => {
-	const result = buildSandwitch(mockSandwich);
+describe("when it builds a sandwich", () => {
+	const result = buildSandwich(mockSandwich);
 
 	it("saves the sandwich to the db", () => {
 		expect(db.contains(mockSandwich)).toBe(true);
@@ -221,7 +221,7 @@ it("shows the title", () => {
 it("shows the description", () => {
 	render(<Sandwich title="Clubhouse" />);
 	expect(
-		screen.getByText("A delicious sanwitch featuring bread and a tomato!"),
+		screen.getByText("A delicious sandwich featuring bread and a tomato!"),
 	).toBeInTheDocument();
 });
 ```
@@ -238,7 +238,7 @@ describe("content", () => {
 
 	it("shows the description", () => {
 		expect(
-			screen.getByText("A delicious sanwitch featuring bread and a tomato!"),
+			screen.getByText("A delicious sandwich featuring bread and a tomato!"),
 		).toBeInTheDocument();
 	});
 });
@@ -253,8 +253,8 @@ Lifecycle hooks should relate to a single concern.
 ```ts
 describe("with lettuce", () => {
 	beforeEach(() => {
-		sandwitch.addLettuce();
-		resturant.build(sandwitch);
+		sandwich.addLettuce();
+		restaurant.build(sandwich);
 	});
 });
 ```
@@ -263,8 +263,8 @@ describe("with lettuce", () => {
 
 ```ts
 describe("with lettuce", () => {
-	beforeEach(() => sandwitch.addLettuce());
-	beforeEach(() => resturant.build(sandwitch));
+	beforeEach(() => sandwich.addLettuce());
+	beforeEach(() => restaurant.build(sandwich));
 });
 ```
 
@@ -276,24 +276,24 @@ present tense.
 #### Bad
 
 ```ts
-it("should return a sandwitch", () => {});
+it("should return a sandwich", () => {});
 ```
 
 #### Good
 
 ```ts
-it("returns a sandwitch", () => {});
+it("returns a sandwich", () => {});
 ```
 
-## Describe the Expected Behavior / What the User Will See
+## Describe the Expected Behaviour / What the User Will See
 
-Describe and test the expected behavior of the unit you are testing not the
+Describe and test the expected behaviour of the unit you are testing not the
 implementation details.
 
 https://testing-library.com/docs/guiding-principles
 
 This is true for both backend and frontend code. We should be testing the
-behavior based on how things will be used and their expected responses.
+behaviour based on how things will be used and their expected responses.
 
 #### Bad
 

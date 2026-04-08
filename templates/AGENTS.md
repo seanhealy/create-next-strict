@@ -64,7 +64,7 @@ src/
 - **Indentation:** Tabs (not spaces)
 - **Line width:** 80 columns
 - **Import alias:** `@/*` maps to `src/*`
-- **Imports:** Auto-organized by Biome
+- **Imports:** Auto-organised by Biome
 - **Object/interface properties:** Order by importance, not alphabetically.
   Group related properties together. Identifying fields (e.g., `identifier`)
   come first, core fields next, optional/metadata fields last.
@@ -102,7 +102,7 @@ See docs/TESTING.md for testing conventions.
 | `npm run test`        | Run tests once                          |
 | `npm run test:watch`  | Run tests in watch mode                 |
 | `npm run typecheck`   | TypeScript type check (no emit)         |
-| `npm run verify`      | Typecheck + lint:fix + test in one |
+| `npm run verify`      | Typecheck + lint:fix + test in one      |
 
 ## Before Submitting Changes
 
