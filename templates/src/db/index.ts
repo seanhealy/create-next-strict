@@ -1,11 +1,13 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
-
-import * as schema from "./schema";
+import { Pool } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-serverless";
 import { assertValue } from "@/utilities/assertValue";
+import * as schema from "./schema";
 
-const sql = neon(
-	assertValue(process.env.DATABASE_URL, "DATABASE_URL is not set"),
-);
+const pool = new Pool({
+	connectionString: assertValue(
+		process.env.DATABASE_URL,
+		"DATABASE_URL is not set",
+	),
+});
 
-export const db = drizzle(sql, { schema });
+export const db = drizzle(pool, { schema });

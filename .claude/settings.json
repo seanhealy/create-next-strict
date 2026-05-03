@@ -5,6 +5,7 @@
 			"Bash(npm run test:seed)",
 			"Bash(npm run test:clean)",
 			"Bash(npm run lint)",
+			"Bash(npm run verify)",
 			"Bash(npm list)"
 		]
 	}

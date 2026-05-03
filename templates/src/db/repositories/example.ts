@@ -12,9 +12,7 @@ import { db } from "@/db";
 export const ExampleRepository = {
 	/** Verify the database connection is working. */
 	async healthCheck(): Promise<{ now: Date }> {
-		const result = await db.execute(
-			sql`SELECT NOW() as now`,
-		);
+		const result = await db.execute(sql`SELECT NOW() as now`);
 		return { now: result.rows[0].now as Date };
 	},
 };

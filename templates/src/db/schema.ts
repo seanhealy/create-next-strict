@@ -10,3 +10,5 @@
 // 	email: text("email").notNull().unique(),
 // 	createdAt: timestamp("created_at").defaultNow().notNull(),
 // });
+
+export {};

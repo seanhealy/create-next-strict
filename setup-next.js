@@ -20,6 +20,7 @@ const SETUP_CONFIG = {
 	packages: {
 		"drizzle-orm": "latest",
 		"@neondatabase/serverless": "latest",
+		"@next/env": "latest",
 	},
 
 	// NPM packages to install (dev dependencies)
@@ -48,6 +49,41 @@ const SETUP_CONFIG = {
 				lineWidth: 80,
 			};
 
+			// Ensure files.includes excludes .claude alongside the other defaults
+			if (!config.files) config.files = {};
+			const defaultIncludes = [
+				"**",
+				"!node_modules",
+				"!.next",
+				"!dist",
+				"!build",
+				"!.claude",
+			];
+			const existing = Array.isArray(config.files.includes)
+				? config.files.includes
+				: [];
+			const merged = [...existing];
+			for (const entry of defaultIncludes) {
+				if (!merged.includes(entry)) merged.push(entry);
+			}
+			config.files.includes = merged;
+
+			// Turn on Next.js + React lint domains
+			if (!config.linter) config.linter = {};
+			config.linter.domains = {
+				...(config.linter.domains ?? {}),
+				next: "recommended",
+				react: "recommended",
+			};
+
+			// Allow multiple beforeEach/afterEach hooks per describe so each
+			// hook can stay single-concern (see docs/TESTING.md).
+			if (!config.linter.rules) config.linter.rules = {};
+			config.linter.rules.suspicious = {
+				...(config.linter.rules.suspicious ?? {}),
+				noDuplicateTestHooks: "off",
+			};
+
 			// Ensure assist structure exists and add properties
 			if (!config.assist) config.assist = {};
 			if (!config.assist.actions) config.assist.actions = {};
@@ -66,10 +102,12 @@ const SETUP_CONFIG = {
 		"package.json": (packageJson) => {
 			// Update scripts
 			if (!packageJson.scripts) packageJson.scripts = {};
-			packageJson.scripts.lint = "biome check && prettier --check .";
+			packageJson.scripts["prettier:check"] = "prettier --check --cache .";
+			packageJson.scripts["prettier:fix"] = "prettier --write --cache .";
+			packageJson.scripts.lint = "biome check && npm run prettier:check";
 			packageJson.scripts.format = "biome check --write";
 			packageJson.scripts["lint:fix"] =
-				"biome check --write && prettier --write .";
+				"biome check --write && npm run prettier:fix";
 			packageJson.scripts["db:generate"] = "drizzle-kit generate";
 			packageJson.scripts["db:migrate"] = "drizzle-kit migrate";
 			packageJson.scripts["db:push"] = "drizzle-kit push";
@@ -78,7 +116,7 @@ const SETUP_CONFIG = {
 			packageJson.scripts["test:watch"] = "vitest";
 			packageJson.scripts.typecheck = "tsc --noEmit";
 			packageJson.scripts.verify =
-				"npm run typecheck && npm run lint:fix && npm run test";
+				"npm run test && npm run lint:fix && npm run typecheck";
 
 			// Update volta configuration
 			if (!packageJson.volta) packageJson.volta = {};
@@ -94,7 +132,6 @@ const SETUP_CONFIG = {
 	symlinks: {
 		"AGENTS.md": ["CLAUDE.md", ".github/copilot-instructions.md"],
 	},
-
 };
 
 import { execSync } from "node:child_process";

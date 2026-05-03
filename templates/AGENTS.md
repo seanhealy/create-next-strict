@@ -64,7 +64,7 @@ src/
 - **Indentation:** Tabs (not spaces)
 - **Line width:** 80 columns
 - **Import alias:** `@/*` maps to `src/*`
-- **Imports:** Auto-organised by Biome
+- **Imports:** Auto-organized by Biome
 - **Object/interface properties:** Order by importance, not alphabetically.
   Group related properties together. Identifying fields (e.g., `identifier`)
   come first, core fields next, optional/metadata fields last.
@@ -80,6 +80,14 @@ src/
 - **Directory modules:** When a module grows into a directory, use `index.ts` as
   a barrel export only — the implementation lives in a named file (e.g.,
   `machineBuilder/index.ts` re-exports from `machineBuilder/machineBuilder.ts`)
+- When coding keep things simple and understandable. We don't want to
+  prematurely over engineer solutions. A good guideline is how easy is it to
+  mutate the code. As the only certainty we have is that we're going to have
+  change what we've written. Following this will emerge good practices tempered
+  by not getting too ahead of ourselves.
+- Follow existing patterns and conventions within a code base. When possible
+  similar systems should work in the same way so you can make easier connections
+  about how things work.
 
 ## Testing Conventions
 
@@ -92,18 +100,25 @@ See docs/TESTING.md for testing conventions.
 | `npm run dev`         | Start dev server (Turbopack)            |
 | `npm run build`       | Production build                        |
 | `npm run start`       | Start production server                 |
-| `npm run lint`        | Check with Biome + Prettier             |
-| `npm run format`      | Auto-fix with Biome                     |
-| `npm run lint:fix`    | Auto-fix with Biome + Prettier          |
+| `npm run verify`      | Run tests + lint:fix + typecheck in one |
 | `npm run db:generate` | Generate migrations from schema         |
 | `npm run db:migrate`  | Run pending migrations                  |
 | `npm run db:push`     | Push schema directly (dev shortcut)     |
 | `npm run db:studio`   | Open Drizzle Studio (visual DB browser) |
 | `npm run test`        | Run tests once                          |
 | `npm run test:watch`  | Run tests in watch mode                 |
-| `npm run typecheck`   | TypeScript type check (no emit)         |
-| `npm run verify`      | Typecheck + lint:fix + test in one      |
 
 ## Before Submitting Changes
 
-Run `npm run verify` to typecheck, auto-fix lint issues, and run tests.
+Run `npm run verify` to run tests, auto-fix lint issues, and typecheck.
+
+## Working with the operator
+
+- **File references in conversation text** use project-relative paths (e.g.,
+  `src/db/schema.ts:14`), not absolute paths. The project root is the implicit
+  base.
+- **Slow down before writing.** Read each task fully and think through naming,
+  file placement, and structure before writing code — don't rush to a working
+  result and clean up later.
+- **Keep tests in sync.** When modifying a module that has a `.test` file,
+  update the tests in the same pass. Don't leave them stale.

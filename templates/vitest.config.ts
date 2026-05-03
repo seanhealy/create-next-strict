@@ -10,5 +10,6 @@ export default defineConfig({
 		clearMocks: true,
 		environment: "jsdom",
 		setupFiles: ["./vitest.setup.ts"],
+		exclude: ["node_modules", ".claude"],
 	},
 });

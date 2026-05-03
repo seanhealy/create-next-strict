@@ -39,7 +39,8 @@
 		"lint:fix": "biome check --write && prettier --write .",
 		"test": "node setup-next.js --dry-run",
 		"test:seed": "mkdir -p test-app && cd test-app && node ../setup-next.js",
-		"test:clean": "rm -rf test-app"
+		"test:clean": "rm -rf test-app",
+		"verify": "npm run test && npm run lint:fix"
 	},
 	"volta": {
 		"node": "24.10.0",

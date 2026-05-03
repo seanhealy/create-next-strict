@@ -1,6 +1,9 @@
+import { loadEnvConfig } from "@next/env";
 import { defineConfig } from "drizzle-kit";
 
 import { assertValue } from "@/utilities/assertValue";
+
+loadEnvConfig(process.cwd());
 
 export default defineConfig({
 	dialect: "postgresql",

@@ -84,7 +84,7 @@ describe("sandwich/page", () => {
 ## Nest Describes to add Context
 
 Use nested describes to add context to your tests. Contexts are a powerful
-method to make your tests clear and well organised (they keep tests easy to
+method to make your tests clear and well organized (they keep tests easy to
 read). When describing a context, start its description with 'when', 'as',
 'with' or 'without'.
 
